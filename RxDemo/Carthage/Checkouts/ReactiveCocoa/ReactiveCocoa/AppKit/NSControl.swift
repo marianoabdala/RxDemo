@@ -2,6 +2,8 @@ import ReactiveSwift
 import enum Result.NoError
 import AppKit
 
+extension NSControl: ActionMessageSending {}
+
 extension Reactive where Base: NSControl {
 	/// Sets whether the control is enabled.
 	public var isEnabled: BindingTarget<Bool> {
@@ -15,19 +17,25 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `NSAttributedString`, emitted by the control.
 	public var attributedStringValues: Signal<NSAttributedString, NoError> {
-		return trigger.map { [unowned base = self.base] in base.attributedStringValue }
+		return proxy.invoked.map { $0.attributedStringValue }
 	}
 
 	/// Sets the value of the control with a `Bool`.
 	public var boolValue: BindingTarget<Bool> {
+		#if swift(>=4.0)
+		return makeBindingTarget { $0.integerValue = $1 ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue }
+		#else
 		return makeBindingTarget { $0.integerValue = $1 ? NSOnState : NSOffState }
+		#endif
 	}
 
 	/// A signal of values in `Bool`, emitted by the control.
 	public var boolValues: Signal<Bool, NoError> {
-		return trigger.map { [unowned base = self.base] in
-			return base.integerValue == NSOffState ? false : true
-		}
+		#if swift(>=4.0)
+		return proxy.invoked.map { $0.integerValue != NSControl.StateValue.off.rawValue }
+		#else
+		return proxy.invoked.map { $0.integerValue != NSOffState }
+		#endif
 	}
 
 	/// Sets the value of the control with a `Double`.
@@ -37,7 +45,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `Double`, emitted by the control.
 	public var doubleValues: Signal<Double, NoError> {
-		return trigger.map { [unowned base = self.base] in base.doubleValue }
+		return proxy.invoked.map { $0.doubleValue }
 	}
 
 	/// Sets the value of the control with a `Float`.
@@ -47,7 +55,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `Float`, emitted by the control.
 	public var floatValues: Signal<Float, NoError> {
-		return trigger.map { [unowned base = self.base] in base.floatValue }
+		return proxy.invoked.map { $0.floatValue }
 	}
 
 	/// Sets the value of the control with an `Int32`.
@@ -57,7 +65,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `Int32`, emitted by the control.
 	public var intValues: Signal<Int32, NoError> {
-		return trigger.map { [unowned base = self.base] in base.intValue }
+		return proxy.invoked.map { $0.intValue }
 	}
 
 	/// Sets the value of the control with an `Int`.
@@ -67,7 +75,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `Int`, emitted by the control.
 	public var integerValues: Signal<Int, NoError> {
-		return trigger.map { [unowned base = self.base] in base.integerValue }
+		return proxy.invoked.map { $0.integerValue }
 	}
 
 	/// Sets the value of the control.
@@ -77,7 +85,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `Any?`, emitted by the control.
 	public var objectValues: Signal<Any?, NoError> {
-		return trigger.map { [unowned base = self.base] in base.objectValue }
+		return proxy.invoked.map { $0.objectValue }
 	}
 
 	/// Sets the value of the control with a `String`.
@@ -87,26 +95,7 @@ extension Reactive where Base: NSControl {
 
 	/// A signal of values in `String`, emitted by the control.
 	public var stringValues: Signal<String, NoError> {
-		return trigger.map { [unowned base = self.base] in base.stringValue }
-	}
-
-	/// A trigger signal that sends a `next` event for every action messages
-	/// received from the control, and completes when the control deinitializes.
-	internal var trigger: Signal<(), NoError> {
-		return associatedValue { base in
-			let (signal, observer) = Signal<(), NoError>.pipe()
-
-			let receiver = CocoaTarget(observer)
-			base.target = receiver
-			base.action = #selector(receiver.sendNext)
-
-			lifetime.ended.observeCompleted {
-				_ = receiver
-				observer.sendCompleted()
-			}
-
-			return signal
-		}
+		return proxy.invoked.map { $0.stringValue }
 	}
 }
 

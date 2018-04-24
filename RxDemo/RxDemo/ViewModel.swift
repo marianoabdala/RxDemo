@@ -28,7 +28,7 @@ class ViewModel {
                     
                     if let firstName = firstName {
                         
-                        if firstName.characters.count > 4 {
+                        if firstName.count > 4 {
                             
                             salutation += ", " + firstName
                             
