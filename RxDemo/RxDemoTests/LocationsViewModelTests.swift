@@ -22,4 +22,20 @@ class LocationsViewModelTests: XCTestCase {
         
         XCTAssertEqual(viewModel.cities.value, [locations.caba, locations.mdq])
     }
+    
+    func testCountryChangeWithProvinceAndCitySelected() {
+        
+        let locations = Locations()
+        let viewModel = LocationsViewModel()
+        
+        viewModel.selectedCountry.value = locations.argentina
+        viewModel.selectedProvince.value = locations.buenosAires
+        viewModel.selectedCity.value = locations.caba
+
+        viewModel.selectedCountry.value = locations.uruguay
+        
+        XCTAssertEqual(viewModel.provinces.value, [locations.colonia, locations.maldonado])
+        XCTAssertEqual(viewModel.cities.value, [])
+
+    }
 }

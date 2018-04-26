@@ -26,6 +26,9 @@ class LocationsViewModel {
             
             locations.cities.filter { $0.parentLocation == province }
         }
+        
+        self.selectedProvince <~ self.provinces.producer.map { _ in return nil }
+        self.selectedCity <~ self.cities.producer.map { _ in return nil }
     }
 }
  

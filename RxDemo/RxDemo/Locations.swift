@@ -14,6 +14,9 @@ class Locations {
     let cordoba: Location
     let santaFe: Location
     
+    let colonia: Location
+    let maldonado: Location
+    
     let caba: Location
     let mdq: Location
     let cordobaCapital: Location
@@ -31,8 +34,10 @@ class Locations {
         self.buenosAires = Location(name: "Buenos Aires", parent: argentina)
         self.cordoba = Location(name: "Córdoba", parent: argentina)
         self.santaFe = Location(name: "Santa Fé", parent: argentina)
-        
-        self.provinces = [self.buenosAires, self.cordoba, self.santaFe]
+        self.colonia = Location(name: "Colonia", parent: uruguay)
+        self.maldonado = Location(name: "Maldonado", parent: uruguay)
+
+        self.provinces = [self.buenosAires, self.cordoba, self.santaFe, self.colonia, self.maldonado]
         
         self.caba = Location(name: "CABA", parent: buenosAires)
         self.mdq = Location(name: "Mar del Plata", parent: buenosAires)
