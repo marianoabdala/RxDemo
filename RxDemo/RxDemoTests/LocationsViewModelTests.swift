@@ -36,6 +36,5 @@ class LocationsViewModelTests: XCTestCase {
         
         XCTAssertEqual(viewModel.provinces.value, [locations.colonia, locations.maldonado])
         XCTAssertEqual(viewModel.cities.value, [])
-
     }
 }

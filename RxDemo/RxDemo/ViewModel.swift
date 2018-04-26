@@ -31,7 +31,6 @@ class ViewModel {
                         if firstName.count > 4 {
                             
                             salutation += ", " + firstName
-                            
                         }
                     }
 
@@ -49,7 +48,6 @@ class ViewModel {
                 }
                 
                 return !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !password.isEmpty
-        }
-        
+            }
     }
 }
