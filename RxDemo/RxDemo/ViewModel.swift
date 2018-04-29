@@ -10,7 +10,6 @@ class ViewModel {
     let password = MutableProperty<String?>(nil)
     let isValid = MutableProperty(false)
     let isNextButtonTapped = MutableProperty(false)
-    let isNextButtonEnabled = MutableProperty(false)
 
     init() {
         
