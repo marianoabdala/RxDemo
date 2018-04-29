@@ -18,16 +18,13 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         
         self.headerLabel.reactive.text <~ self.viewModel.salutation
+        self.nextButton.reactive.isEnabled <~ self.viewModel.isValid
+
         self.viewModel.firstName <~ self.firstNameTextField.reactive.continuousTextValues
         self.viewModel.lastName <~ self.lastNameTextField.reactive.continuousTextValues
         self.viewModel.email <~ self.emailTextField.reactive.continuousTextValues
         self.viewModel.password <~ self.passwordTextField.reactive.continuousTextValues
         
-        self.nextButton.reactive.isEnabled <~ self.viewModel.isValid
-    }
-    
-    @IBAction func nextButtonTapped(_ sender: Any) {
-        
-        self.viewModel.isNextButtonTapped.value = true
+        self.viewModel.isNextButtonTapped <~ self.nextButton.reactive.controlEvents(.touchUpInside).map { _ in return true }
     }
 }
